@@ -7,9 +7,12 @@ import sqlite3 from 'sqlite3';
 const app = express();
 const port = 3000;
 
-//const db = new sqlite3.Database(process.env.DATABASE_URL);
+if(!process.env.DATABASE_URL) {
+  throw new Error('DATABASE_URL is undefined');
+}
 
-console.log(`process.env('DATABASE_URL')=${process.env.DATABASE_URL}`);
+console.log(`$DATABASE_URL = ${process.env.DATABASE_URL}`);
+const db = new sqlite3.Database(process.env.DATABASE_URL);
 
 app.get('/', (req, res) => {
   res.redirect('/index.html');
