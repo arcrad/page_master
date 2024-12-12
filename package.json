@@ -10,8 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@extractus/article-extractor": "^8.0.16",
     "dotenv": "^16.4.7",
     "express": "^4.21.1",
+    "jsdom": "^25.0.1",
     "sqlite3": "^5.1.7"
   }
 }
