@@ -27,6 +27,10 @@ db.run(`CREATE TABLE IF NOT EXISTS visits (
 )`);
 
 app.get('/', async (req, res) => {
+  res.redirect('/index.html');
+});
+
+app.get('/visit', async (req, res) => {
   db.run('INSERT INTO visits (created_time) VALUES (unixepoch())');
   function fetchVisits() {
       return new Promise( (resolve, reject) => {
