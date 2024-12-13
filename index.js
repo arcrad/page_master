@@ -4,16 +4,15 @@ import express from 'express';
 import fs from 'fs';
 import sqlite3 from 'sqlite3';
 import { extract } from '@extractus/article-extractor';
-import { createClient } from 'pexels';
+//import { createClient } from 'pexels';
 
 import parseHtml from './src/utils/parseHtml.js';
 import chunkSection from './src/utils/chunkSection.js';
 import extractKeyTerms from './src/utils/extractKeyTerms.js';
+import { searchPhotos, getPhoto } from './src/utils/pexelsWrapper.js';
 
 const app = express();
 const port = 3000;
-
-const pexelsClient = createClient(process.env.PEXELS_API_KEY);
 
 if(!process.env.DATABASE_URL) {
   throw new Error('DATABASE_URL is undefined');
@@ -49,17 +48,6 @@ app.get('/', async (req, res) => {
   res.send(`Welcome! You are visitor ${total_visits}`);
 });
 
-function searchPhotos(query) {
-  return new Promise( (resolve, reject) => {
-    pexelsClient.photos.search({ query, per_page: 1 }).then(photos => { return resolve(photos)});
-  });
-}
-
-function getPhoto(photo_id) {
-  return new Promise( (resolve, reject) => {
-    pexelsClient.photos.show({ id: photo_id}).then(photo => { return resolve(photo)});
-  });
-}
 
 app.get('/makebook/:source_url', async (req, res) => {
   const source_url = req.params.source_url; 
