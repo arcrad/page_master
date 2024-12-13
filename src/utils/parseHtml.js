@@ -2,40 +2,26 @@ import { JSDOM } from 'jsdom';
 
 export default function parseHtml(input_html) {
   const dom = new JSDOM(input_html);
-  let allElems = dom.window.document.querySelectorAll('body *');
-  //let allElems = dom.window.document.body.children;
-  console.dir(`length=${allElems.length}`);
+  let all_elems = dom.window.document.querySelectorAll('body *');
   let sections = [];
-  let currentSection = {
+  let current_section = {
     'title': undefined,
     'text': '' 
   };
-  /*
-  let nextSection = {
-    'title': undefined,
-    'text': '' 
-  };
-  */
-  for(let elem of allElems) {
-    console.log(elem.tagName);
+  for(let elem of all_elems) {
     if(elem.tagName === 'P') {
-      console.log('found P elem');
-      currentSection.text += elem.textContent;
+      current_section.text += elem.textContent;
     }
     if(elem.tagName.startsWith('H')) {
-      console.log('found H elem');
       const hText = elem.textContent.replaceAll(/[\n\s]+/ig, ' ').trim();
-      console.log(`  H text = ${hText}`);
-      sections.push({...currentSection});
-      currentSection = {
+      sections.push({...current_section});
+      current_section = {
         'title': hText,
         'text': ''
       };
     } 
   }
-  sections.push({...currentSection});
-  console.dir(sections);
-  //console.log('-----');
-  //console.log(dom.window.document.body.textContent);
-  return input_html.length;
+  sections.push({...current_section});
+  //console.dir(sections);
+  return sections;
 };
