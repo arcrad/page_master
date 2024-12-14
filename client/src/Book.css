@@ -1,0 +1,30 @@
+.book {
+  border: 1px solid red;
+  margin: 1rem auto;
+  width: 80ex;
+  max-width: 96%;
+  position: relative;
+}
+
+.page {
+  border: 1px solid blue;
+  margin: 1rem;
+  height: 90dvh;
+  position: absolute;
+  top: 0;
+  left: 0; 
+}
+
+.page.past {
+  background: pink;
+  transform: translateX(-100dvw);
+}
+
+.page.current {
+  background: green;
+}
+
+.page.upcoming {
+  background: yellow;
+  transform: translateX(100dvw);
+}

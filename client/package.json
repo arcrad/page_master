@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "deploy-better": "tsc -b && vite build && cp -r dist/* ../public/",
+    "deploy": "vite build && cp -r dist/* ../public/",
     "lint": "eslint .",
     "preview": "vite preview"
   },
