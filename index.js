@@ -53,6 +53,14 @@ app.get('/visit', async (req, res) => {
 });
 
 
+function fauxPause() {
+  return new Promise( (resolve, reject) => {
+    setTimeout( () => {
+      return resolve(true);
+    }, 1000);
+  });
+};
+
 app.get('/makebook/:source_url', async (req, res) => {
   const source_url = req.params.source_url; 
   console.log(`source_url=${source_url}`);
@@ -93,6 +101,7 @@ app.get('/makebook/:source_url', async (req, res) => {
     const photo_search_results = await searchPhotos(query);
     const photo_id = photo_search_results.photos[0].id;
     const photo = await getPhoto(photo_id);
+    await fauxPause();
     //console.dir(photo);
     page.photo_url = photo.src.original;
   }
