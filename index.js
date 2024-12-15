@@ -53,11 +53,11 @@ app.get('/visit', async (req, res) => {
 });
 
 
-function fauxPause() {
+function fauxPause(multiplier) {
   return new Promise( (resolve, reject) => {
     setTimeout( () => {
       return resolve(true);
-    }, 1000);
+    }, 1000*multiplier);
   });
 };
 
@@ -81,7 +81,7 @@ app.get('/makebook/:source_url', async (req, res) => {
   }
   // Chunk article into pages. 
   for(const section of html_sections) {
-    section.chunked_text = chunkSection(section, 3);
+    section.chunked_text = chunkSection(section, 2);
   }
   let pages = [];
   let page_count = 1;
@@ -98,12 +98,27 @@ app.get('/makebook/:source_url', async (req, res) => {
   for(const page of pages) {
     page.key_terms = extractKeyTerms(page.text);
     const query = page.key_terms.join(' ');
-    const photo_search_results = await searchPhotos(query);
-    const photo_id = photo_search_results.photos[0].id;
-    const photo = await getPhoto(photo_id);
-    await fauxPause();
-    //console.dir(photo);
-    page.photo_url = photo.src.original;
+    let photo = undefined;
+    let tryCount = 0;
+    while(!photo && tryCount < 5) {
+      console.log(`try to fetch photo, attempt #${tryCount}...`);
+      try {
+      const photo_search_results = await searchPhotos(query);
+      const photo_id = photo_search_results.photos[0].id;
+      photo = await getPhoto(photo_id);
+      } catch (err) {
+        console.error('failed to fetch');
+      }
+      await fauxPause(tryCount);
+      tryCount++;
+    }
+    if(!photo) {
+      page.photo_url = 'https://images.pexels.com/photos/7648022/pexels-photo-7648022.jpeg';
+    } else { 
+      //console.dir(photo);
+      //page.photo_url = photo.src.original;
+      page.photo_url = photo.src.medium;
+    }
   }
   console.dir(pages);
   // Find an image for each page.
