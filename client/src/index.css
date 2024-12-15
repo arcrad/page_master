@@ -5,7 +5,8 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: #000;
+  background-color: #141414;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -26,21 +27,79 @@ body {
   margin: 0;
 }
 
+.mainContainer {
+  background: #ffd;
+  width: 80ex;
+  max-width: 92%;
+  margin: 0 auto;
+  padding: 0 0.5rem 0.5rem 0.5rem;
+  box-sizing: border-box;
+}
+
+.topBar {
+  border-bottom:1px solid red;
+}
+
+.topBar.visible {
+  display: block;
+}
+
+.topBar.hidden {
+  display: none;
+}
+.topBarToggleContainer {
+  border-bottom:1px solid red;
+  display: flex;
+  flex-direction: row;
+  justify-content:center;
+  align-items: flex-start;
+}
+
+.topBarToggleContainer button {
+  background: none;
+  color: #000;
+  border: 1px solid black;
+  border-width: 0px 1px 1px 1px;
+  border-radius: 0 0 0.5rem 0.5rem;
+  margin: 0;
+}
+
+.bookNav {
+  padding: 0.5rem 0;
+  text-align: center;
+}
+
+.bookNav button {
+  margin: 0 0.25rem;
+}
+
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  margin: 0 auto 0.5rem auto;
+  align: center;
+}
+
+input[type='text'] {
+  border: 1px solid #339933;
+  font-size: 1rem;
+  margin: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem; 
 }
 
 button {
-  border-radius: 8px;
+  border-radius: 0.5rem;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1;
+  font-weight: 700;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #339933;
   cursor: pointer;
   transition: border-color 0.25s;
+  color: #fff;
 }
 button:hover {
   border-color: #646cff;
@@ -50,6 +109,7 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/*
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -62,3 +122,4 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+*/

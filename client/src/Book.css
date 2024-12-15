@@ -1,30 +1,61 @@
 .book {
   border: 1px solid red;
   margin: 1rem auto;
-  width: 80ex;
-  max-width: 96%;
+  width: 100%;
   position: relative;
+  height: 90dvh;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .page {
   border: 1px solid blue;
-  margin: 1rem;
-  height: 90dvh;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
   position: absolute;
   top: 0;
   left: 0; 
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 1rem 0;
 }
 
 .page.past {
-  background: pink;
   transform: translateX(-100dvw);
 }
 
 .page.current {
-  background: green;
 }
 
 .page.upcoming {
   background: yellow;
   transform: translateX(100dvw);
+}
+
+.page .contentBox {
+  width: 70%;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+  background: #ffffff5f;
+  backdrop-filter: blur(19px);
+  border-radius: 2rem;
+  position: relative;
+  text-align: center;
+}
+
+.page .contentBox p {
+  margin: 0.5rem 0;
+}
+.blah .page .contentBox::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  float: left;
+  shape-outside: circle(100px);
+  shape-margin: 7%;
 }

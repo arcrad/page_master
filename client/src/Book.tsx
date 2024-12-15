@@ -17,7 +17,9 @@ export function Book({currentPage, children}) {
   );
 }
 
-export function Page({number, children}) {
+const JUSTIFICATION = ['flex-start', 'center', 'flex-end'];
+
+export function Page({number, imageUrl, justificationIndex, children}) {
   const bookContext = useContext(BookContext);
   let stateClass = "";
   if(number === bookContext.currentPage) {
@@ -28,10 +30,13 @@ export function Page({number, children}) {
     stateClass = " upcoming";
   }
     
+  console.log(`justificationIndex=${justificationIndex}`);
+  //<article className={'page' + stateClass} style={{'background': 'url('+imageUrl+');'}}>
   return (
-    <article className={'page' + stateClass}>
-      <p>number={number} currentPage={bookContext.currentPage}</p>
-      {children}
+    <article className={'page' + stateClass} style={{'background-image': 'url("'+imageUrl+'"', 'justify-content': JUSTIFICATION[parseInt(justificationIndex)]}}>
+      <div className="contentBox">
+        {children}
+      </div>
     </article>
   );
 }
