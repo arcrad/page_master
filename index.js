@@ -9,7 +9,8 @@ import { extract } from '@extractus/article-extractor';
 import parseHtml from './src/utils/parseHtml.js';
 import chunkSection from './src/utils/chunkSection.js';
 import extractKeyTerms from './src/utils/extractKeyTerms.js';
-import { searchPhotos, getPhoto } from './src/utils/pexelsWrapper.js';
+//import { searchPhotos, getPhoto } from './src/utils/pexelsWrapper.js';
+import { PhotoService } from './src/utils/photoService.js';
 
 const app = express();
 const port = 3000;
@@ -20,6 +21,8 @@ if(!process.env.DATABASE_URL) {
 
 console.log(`$DATABASE_URL = ${process.env.DATABASE_URL}`);
 const db = new sqlite3.Database(process.env.DATABASE_URL);
+
+const photoService = new PhotoService(process.env.PEXELS_API_KEY, db);
 
 db.run(`CREATE TABLE IF NOT EXISTS visits (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -100,23 +103,29 @@ app.get('/makebook/:source_url', async (req, res) => {
     const query = page.key_terms.join(' ');
     let photo = undefined;
     let tryCount = 0;
-    while(!photo && tryCount < 5) {
-      console.log(`try to fetch photo, attempt #${tryCount}...`);
-      try {
+    //while(!photo && tryCount < 5) {
+      //console.log(`try to fetch photo, attempt #${tryCount}...`);
+      //try {
+      /*
       const photo_search_results = await searchPhotos(query);
       const photo_id = photo_search_results.photos[0].id;
       photo = await getPhoto(photo_id);
-      } catch (err) {
-        console.error('failed to fetch');
-      }
-      await fauxPause(tryCount);
-      tryCount++;
-    }
+      */
+      photo = await photoService.findPhoto(query);
+      console.dir(photo);
+      //} catch (err) {
+      //  console.error('failed to fetch');
+      //}
+      //await fauxPause(tryCount);
+      //tryCount++;
+    //}
     if(!photo) {
+      console.log('!!! no photo, using static url');
       page.photo_url = 'https://images.pexels.com/photos/7648022/pexels-photo-7648022.jpeg';
     } else { 
       //console.dir(photo);
       //page.photo_url = photo.src.original;
+      console.log(`!!! got photo response, using=${photo.src.medium}`);
       page.photo_url = photo.src.medium;
     }
   }
