@@ -112,7 +112,7 @@ app.get('/makebook/:source_url', async (req, res) => {
       photo = await getPhoto(photo_id);
       */
       photo = await photoService.findPhoto(query);
-      console.dir(photo);
+      //console.dir(photo);
       //} catch (err) {
       //  console.error('failed to fetch');
       //}
