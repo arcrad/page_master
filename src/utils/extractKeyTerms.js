@@ -2,19 +2,25 @@ const IGNORE_WORDS = ['the','be','to','of','and','a','in','that','have','I','it'
 
 const MAX_TERMS = 3;
 
+function startsWithSpecialChar(word) {
+    return ( word.match(/^[0-9\(\)\\\/\:\;\[\]\{\}\<\>\,\.]/)?.length > 0 );
+}
+
 export default function extractKeyTerms(input_text) {
   const words = input_text.split(' ');
-  const filtered_words = words.filter((word) => !IGNORE_WORDS.includes(word.toLowerCase())); 
-  let seen_words = [];
-  const deduplicated_words = filtered_words.filter((word) => {
-    const word_starts_with_special_char = ( word.match(/^[0-9\(\)\\\/\:\;\[\]\{\}\<\>\,\.]/)?.length > 0 );
-    const word_already_seen = seen_words.includes(word.toLowerCase())
-    if(!word_already_seen) {
-      seen_words.push(word);
+  const filteredWords = words.filter((word) => !IGNORE_WORDS.includes(word.toLowerCase())); 
+  let seenWords = [];
+  const deduplicatedWords = filteredWords.filter((word) => {
+    if(startsWithSpecialChar(word)) {
+      return false;
+    } 
+    const alreadySeen = seenWords.includes(word.toLowerCase());
+    if(!alreadySeen) {
+      seenWords.push(word);
     }
-    return !word_already_seen && !word_starts_with_special_char;
+    return !alreadySeen;
   }); 
-  const sorted_words = deduplicated_words.sort( (a,b) => {
+  const sortedWords = deduplicatedWords.sort( (a,b) => {
     if(a.length < b.length) { 
       return 1; 
     }
@@ -23,7 +29,9 @@ export default function extractKeyTerms(input_text) {
     }
     return 0;
   });
-  const key_terms = sorted_words.slice(0, MAX_TERMS).map( (term) => term.replaceAll(/[,.-]+/g, ' '));
-  console.dir(key_terms);
+  const key_terms = sortedWords
+    .slice(0, MAX_TERMS)
+    .map( (term) => term.replaceAll(/[,.-]+/g, ' ') );
+  //console.dir(key_terms);
   return key_terms; 
 }
