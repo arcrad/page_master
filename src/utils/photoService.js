@@ -118,24 +118,26 @@ export class PhotoService {
       console.log('!!!!! found photo cache hit');
       return JSON.parse(cacheQueryResult[0].photo_json);
     }
-    const randomQueryResult = await (new Promise( (resolve, reject) => {
-      this.db.all(
-        `
-          SELECT *
-          FROM photoCache
-          ORDER BY RANDOM()
-          Limit 1
-        `,
-        {},
-        (err, rows) => {
-          if(err) {
-            return reject(err.message);
+    const randomQueryResult = await (
+      new Promise( (resolve, reject) => {
+        this.db.all(
+          `
+            SELECT *
+            FROM photoCache
+            ORDER BY RANDOM()
+            Limit 1
+          `,
+          {},
+          (err, rows) => {
+            if(err) {
+              return reject(err.message);
+            }
+            console.dir(rows);
+            return resolve(rows);
           }
-          console.dir(rows);
-          return resolve(rows);
-        }
-      );
-    }));
+        );
+      })
+    );
     if(randomQueryResult.length === 1) {
       console.log('!!!!! returning random photo from cache');
       return JSON.parse(randomQueryResult[0].photo_json);
@@ -157,7 +159,15 @@ export class PhotoService {
     if(this.#lastApiCallStatus === 200 && photo) {
       //console.dir(photo);
       console.log('&& doFindPhoto found a photo');
-      this.db.run('INSERT INTO photoCache (created_time, photo_json, query_terms) VALUES (unixepoch(), $photo, $query)', {$photo: JSON.stringify(photo), $query: query});
+      this.db.run(
+        `
+          INSERT INTO photoCache 
+          (created_time, photo_json, query_terms) 
+          VALUES 
+          (unixepoch(), $photo, $query)
+        `,
+        {$photo: JSON.stringify(photo), $query: query}
+      );
       return photo;
     } else {
       console.warn('no photo returned. return cache photo.');
