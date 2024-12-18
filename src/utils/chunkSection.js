@@ -1,18 +1,53 @@
-export default function chunkSection(section, max_sentences) {
-  let chunked_section_text = [];
-  let section_text_cleaned = section.text.replaceAll(/\n+/gi,' ').replaceAll(/\s+/gi, ' ');
-  let split_section_text = section_text_cleaned.split('. ');
-  let current_chunk = [];
-  for(const sentence of split_section_text) {
-    let clean_sentence = sentence.trim();
-    if(current_chunk.length < max_sentences) {
-      current_chunk.push(`${sentence}. `);
+const titleMap = {
+  'Dr.': '###DOCTOR',
+  'Esq.': '###ESQUIRE',
+  'Hon.': '###HONORABLE',
+  'Jr.': '###JUNIOR',
+  'Mr.': '###MISTER',
+  'Mrs.': '###MISSES',
+  'Ms.': '###MISS',
+  'Lt.': '###LUTENANT',
+  'Sr.': '###SENIOR',
+  'Rev.': '###REVEREND',
+  'Prof.': '###PROFESSOR',
+  'Rd.': '###ROAD',
+  'Cir.': '###CIRCLE',
+};
+
+const sentencePatterns = /.*?(?:\.+ |\." |\!+ |\?+ |\?+" |\!+" |\.” )/g; 
+
+export default function chunkSection(section, maxSentences) {
+  let chunkedSectionText = [];
+  let sectionTextCleaned = `${section.text} `
+    .replaceAll(/\n+/gi,' ')
+    .replaceAll(/\s+/gi, ' ');
+  // Do title replacements. Prevents chunking on title abbreviations.
+  for(const titleKey in titleMap) {
+    sectionTextCleaned = sectionTextCleaned.replace(titleKey, titleMap[titleKey]);
+  }
+  
+  // Split sentences.
+  const splitSectionText = [...sectionTextCleaned.matchAll(sentencePatterns)].map( 
+    (match) => match[0]
+  );
+
+  // Chunk it.
+  let currentChunk = [];
+  for(const sentence of splitSectionText) {
+    let cleanSentence = sentence;
+    // Reverse title replacments
+    for(const titleKey in titleMap) {
+      cleanSentence = cleanSentence.replace(titleMap[titleKey], titleKey);
+    }
+    if(currentChunk.length < maxSentences) {
+      currentChunk.push(cleanSentence);
     } else {
-      chunked_section_text.push([...current_chunk]);
-      current_chunk = [];
-      current_chunk.push(`${sentence}. `);
+      chunkedSectionText.push([...currentChunk]);
+      currentChunk = [];
+      currentChunk.push(cleanSentence);
     } 
   }
-  //console.dir(chunked_section_text);
-  return chunked_section_text;
+  chunkedSectionText.push([...currentChunk]);
+
+  return chunkedSectionText;
 }
