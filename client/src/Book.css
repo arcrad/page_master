@@ -23,18 +23,19 @@
   flex-direction: column;
   justify-content: flex-start;
   padding: 1rem 0;
+  transition: transform 0.6s ease-in-out;
 }
 
 .page.past {
-  transform: translateX(-100dvw);
+  transform: translateX(-100%);
 }
 
 .page.current {
+  transform: translateX(0%);
 }
 
 .page.upcoming {
-  background: yellow;
-  transform: translateX(100dvw);
+  transform: translateX(100%);
 }
 
 .page .contentBox {
