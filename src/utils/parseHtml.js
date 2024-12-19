@@ -10,7 +10,7 @@ export default function parseHtml(input_html) {
   };
   for(let elem of all_elems) {
     if(elem.tagName === 'P') {
-      current_section.text += elem.textContent;
+      current_section.text += `${elem.textContent} `;
     }
     if(elem.tagName.startsWith('H')) {
       const hText = elem.textContent.replaceAll(/[\n\s]+/ig, ' ').trim();

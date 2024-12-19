@@ -21,7 +21,7 @@ export class PhotoService {
 
   async #fauxPause() {
     return new Promise( (resolve, reject) => {
-      setTimeout( () => resolve(), 300);
+      setTimeout( () => resolve(), 100);
     });
   }
 
@@ -37,20 +37,13 @@ export class PhotoService {
       }
     );
     const responseJson = await response.json();
-    //console.dir(responseJson);
-    //console.dir(response.headers);
-    console.log(`status=${response.status}`);
     // Total rate limit.
     const totalRateLimit = response.headers.get('x-ratelimit-limit'); 
     // Requests before rate limit is exceeded.
     const rateLimitRemaining = response.headers.get('x-ratelimit-remaining'); 
     // UNIX timestamp for when rate limit wil lrset.
     const rateLimitReset = response.headers.get('x-ratelimit-reset');
-    console.log(`totalRateLimit=${totalRateLimit}`);
-    console.log(`rateLimitRemaining=${rateLimitRemaining}`);
-    console.log(`rateLimitReset=${rateLimitReset}`);
-    console.log(`Date.now()    =${Date.now()}`);
-    console.log('---');
+    console.log(`${response.status} limit=${rateLimitRemaining}/${totalRateLimit} reset@${rateLimitReset} now=${Date.now()}`);
     if(response.status === 200) {
       this.#rateLimitRemaining = rateLimitRemaining;
       this.#rateLimitReset = rateLimitReset;
