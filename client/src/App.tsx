@@ -1,6 +1,5 @@
 import { useState, useRef } from 'react'
 
-import './App.css'
 import { Book, Page } from './Book.tsx';
 
 const initialBookData = [

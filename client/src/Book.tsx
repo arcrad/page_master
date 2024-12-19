@@ -30,10 +30,9 @@ export function Page({number, imageUrl, justificationIndex, children}) {
     stateClass = " upcoming";
   }
     
-  console.log(`justificationIndex=${justificationIndex}`);
   //<article className={'page' + stateClass} style={{'background': 'url('+imageUrl+');'}}>
   return (
-    <article className={'page' + stateClass} style={{'background-image': 'url("'+imageUrl+'"', 'justify-content': JUSTIFICATION[parseInt(justificationIndex)]}}>
+    <article className={'page' + stateClass} style={{'backgroundImage': 'url("'+imageUrl+'"', 'justifyContent': JUSTIFICATION[parseInt(justificationIndex)]}}>
       <div className="contentBox">
         {children}
       </div>
