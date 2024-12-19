@@ -126,7 +126,7 @@ app.get('/makebook/:source_url', async (req, res) => {
       //console.dir(photo);
       //page.photo_url = photo.src.original;
       console.log(`!!! got photo response, using=${photo.src.medium}`);
-      page.photo_url = photo.src.medium;
+      page.photo_url = photo.src.large;
     }
   }
   console.dir(pages);
