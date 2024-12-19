@@ -96,13 +96,17 @@ function App() {
           { 
             pages.length > 0 && (
               <div className="bookNav">
-                  <button onClick={prevPage} disabled={(currentPage === 0)}>Previous</button> 
-                { 
-                  currentPage === (pageData.length-1) ? 
-                    <button onClick={firstPage}>↺</button>
-                    :
-                    <button onClick={nextPage}>Next</button> 
-                }
+                <button 
+                  onClick={prevPage}
+                  disabled={(currentPage === 0)}
+                >Previous</button> 
+                <button 
+                  onClick={nextPage} 
+                  disabled={currentPage === (pageData.length-1)}
+                >Next</button> 
+                <button 
+                  onClick={firstPage}
+                >↺</button>
               </div>
             )
           }
