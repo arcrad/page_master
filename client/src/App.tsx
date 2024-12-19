@@ -7,9 +7,7 @@ const initialBookData = [
   {
     title: 'What is Page Master?',
     content_component: function () { return (
-      <>
-        <div><p>Give Page Master the URL for a news article (or any website) and click the <strong>Book It</strong> button. Page Master will break the article down into pages and find a relevant image for each page. The goal is to make a boring article more interesting so you can read it yourself and to your children at the same time.</p></div>
-      </>
+      <div><p>Give Page Master the URL for a news article (or any website) and click the <strong>Book It</strong> button. Page Master will break the article down into pages and find a relevant image for each page. The goal is to make a boring article more interesting so you can read it yourself and to your children at the same time.</p></div>
     )},
     photo_url: 'https://images.pexels.com/photos/7648022/pexels-photo-7648022.jpeg',
     justification_index: 1
@@ -17,13 +15,11 @@ const initialBookData = [
   {
     title: 'More Informaton',
     content_component: function () { return (
-      <>
-        <div>
-          <p>Made by Jonathan Maiorana</p>
-          <p><a href="https://github.com/arcrad/page_master">@arcrad/page_master</a></p>
-          <p>Let me know if you find an article that doesn't work or if something else weird happens.</p>
-        </div>
-      </>
+      <div>
+        <p>Made by Jonathan Maiorana</p>
+        <p><a href="https://github.com/arcrad/page_master">@arcrad/page_master</a></p>
+        <p>Let me know if you find an article that doesn't work or if something else weird happens.</p>
+      </div>
     )},
     photo_url: 'https://images.pexels.com/photos/7653099/pexels-photo-7653099.jpeg',
     justification_index: 1
@@ -83,7 +79,7 @@ function App() {
     return (
       <Page key={index} imageUrl={page.photo_url} number={index} justificationIndex={page.justification_index}>
         { page.title && <h2>{page.title}</h2>}
-        <p>{page.text}</p>
+        { page.text && <p>{page.text}</p> }
         { page.content_component && page.content_component() }
       </Page>
     );
