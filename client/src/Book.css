@@ -39,6 +39,8 @@
 
 .page .contentBox {
   max-width: 80%;
+  max-height: 95%;
+  overflow-y: scroll;
   margin: 0 auto;
   padding: 1rem 1.5rem;
   background: #ffffff6f;
