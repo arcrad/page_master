@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import { motion, AnimatePresence } from 'motion/react';
 
 import { Book, Page } from './Book.tsx';
 
@@ -35,14 +36,40 @@ function App() {
   const [pageData, setPageData] = useState(initialBookData);
   const [currentPage, setCurrentPage] = useState(0);
   const [topBarVisible, setTopBarVisible] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState([]);
   const url = useRef('');
  
 
   async function getPageData() {
-    const encoded_url = encodeURIComponent(url.current.value);
-    const get_page_data_url = `/makebook/${encoded_url}`;
-    let response = await fetch(get_page_data_url);
-    let responseJson = await response.json();
+    setLoading(true);
+    const encodedUrl = encodeURIComponent(url.current.value);
+    const getPageDataUrl = `/makebook/${encodedUrl}`;
+    let response = null;
+    let responseJson = null;
+    try {
+      response = await fetch(getPageDataUrl);
+    } catch (error) {
+      setErrors( (e) => [...e, 'API call error']);
+      setLoading(false);
+      return;
+    }
+    try {
+      responseJson = await response.json();
+    } catch(error) {
+      setErrors( (e) => [...e, 'Error parsing JSON response']);
+      setLoading(false);
+      return;
+    }
+    if(!responseJson) {
+      responseJson = {};
+      responseJson.error = 'No JSON response recieved';
+    }
+    if( responseJson?.error ) {
+      setErrors( (e) => [...e, responseJson.error]);
+      setLoading(false);
+      return;
+    }
     const pages = responseJson.pages;
     const updatedPages = pages.map( (page) => {
       return (
@@ -54,6 +81,7 @@ function App() {
     });
     console.dir(updatedPages);
     setPageData(updatedPages);
+    setLoading(false);
     setTopBarVisible(false);
   }
     
@@ -73,6 +101,13 @@ function App() {
     setTopBarVisible( (s) => !s);
   }
 
+  function closeErrorItem(index) {
+    console.log(index);
+    setErrors( (e) => {
+      const newErrors = e.toSpliced(index, 1);
+      return newErrors;
+    });
+  }
 
   const pages = pageData.map( (page, index) => {
     return (
@@ -83,6 +118,20 @@ function App() {
       </Page>
     );
   });
+
+  const errorsList = errors.map( (error, index) => 
+    <motion.li layout key={index}
+      initial={{ opacity: 0, y: 50, scale: 0.3 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
+      className="errorItem"
+    >
+      <div className="errorItemContent">
+        {error}
+        <button onClick={() => closeErrorItem(index)}>X</button>
+      </div>
+    </motion.li>
+  );
 
   const topBarClasses = 'topBar' + (topBarVisible ? ' visible' : ' hidden');
 
@@ -111,6 +160,11 @@ function App() {
             )
           }
         </div>
+        { loading && <div className="loadingIndicator">
+          <div className="spinner">
+            Loading...
+          </div>
+        </div>}
         <div className={topBarClasses}>
           <div className="titleContainer">
             <h1>Page Master</h1>
@@ -125,6 +179,9 @@ function App() {
             </button>
         </div>
         </div>
+        <ul className="errorsList">
+          { errorsList }
+        </ul>
       </div>
     </>
   )

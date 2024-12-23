@@ -164,3 +164,85 @@ button:focus-visible {
   opacity: 0.42;
   cursor: not-allowed;
 }
+
+.errorsList {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100dvw;
+  height: 100dvh;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  padding: 1rem;
+  margin: 0;
+}
+
+.errorsList .errorItem {
+}
+
+.errorsList .errorItem .errorItemContent {
+  border: 1px solid #922;
+  border-radius: 0.5rem;
+  background: #aa3333dd;
+  margin: 0.25rem;
+  padding: 0.5rem 1rem;
+  color: #fff;
+  display: inline-block;
+  pointer-events: all;
+  filter: drop-shadow(2px 2px 2px #00000099);
+}
+
+.errorsList .errorItem .errorItemContent button {
+  background: none;
+  border: 1px solid #711; 
+  padding: 0 0.75rem;
+  border-radius: 50%;
+  margin: 0 0 0 0.5rem;
+}
+
+.loadingIndicator {
+  position: fixed;
+  width: 100dvw;
+  height: 100dvh;
+  top: 0;
+  left: 0;
+  background: #000000af;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loadingIndicator .spinner {
+  width: 50vmin;
+  height: 50vmin;
+  border-radius: 50%;
+  border: 2.5vmin solid #fff;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 7vmin;
+  font-weight: bold;
+  animation-iteration-count: infinite;
+  animation-duration: 1s;
+  animation-name: pulse;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    scale: 1 1;
+  }
+
+  50% {
+    scale: 1.03 1.03;
+  }
+
+  100% {
+    scale: 1 1;
+  }
+}
