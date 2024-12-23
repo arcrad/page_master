@@ -82,6 +82,7 @@ function App() {
     console.dir(updatedPages);
     setPageData(updatedPages);
     setLoading(false);
+    setErrors([]);
     setTopBarVisible(false);
   }
     
