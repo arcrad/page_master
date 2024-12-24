@@ -31,6 +31,7 @@ const initialBookData = [
     justification_index: 1
   }
 ];
+
 function App() {
   //const [pageData, setPageData] = useState([])
   const [pageData, setPageData] = useState(initialBookData);
@@ -38,10 +39,13 @@ function App() {
   const [topBarVisible, setTopBarVisible] = useState(true);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState([]);
-  const url = useRef('');
- 
+  const url = useRef(null);
 
-  async function getPageData() {
+  async function getBookData() {
+    if(!url.current.value || url.current.value.length < 5) {
+      setErrors( (e) => [...e, 'URL is invalid']);
+      return;
+    }
     setLoading(true);
     const encodedUrl = encodeURIComponent(url.current.value);
     const getPageDataUrl = `/makebook/${encodedUrl}`;
@@ -151,7 +155,7 @@ function App() {
                   disabled={(currentPage === 0)}
                 >Previous</button> 
                 <button 
-                  onClick={nextPage} 
+                  onClick={nextPage}
                   disabled={currentPage === (pageData.length-1)}
                 >Next</button> 
                 <button 
@@ -161,17 +165,20 @@ function App() {
             )
           }
         </div>
-        { loading && <div className="loadingIndicator">
-          <div className="spinner">
-            Loading...
+        { 
+          loading && 
+          <div className="loadingIndicator">
+            <div className="spinner">
+              Loading...
+            </div>
           </div>
-        </div>}
+        }
         <div className={topBarClasses}>
           <div className="titleContainer">
             <h1>Page Master</h1>
             <div className="controlsContainer">
               <input type="text" ref={url}/>
-              <button onClick={getPageData}>Book It</button>
+              <button onClick={getBookData}>Book It</button>
             </div>
           </div>
           <div className="topBarToggleContainer">
