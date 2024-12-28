@@ -15,13 +15,13 @@ The process is essentially:
 
 The implementation of all of this is very much a minimal viable prototype. The content extraction is based on a third party library. The chunking logic is simple and fragile, and the keyword extraction algorithm is hilariously basic. There is a caching layer between the free stock image API just so things can function somewhat reliably when the API inevitably errors out or exceeds the rate limit. 
 
-# A Bit more Detail
+# A Bit More Detail
 
 If you're interested, the following describes some of the functionality in a bit more detail. 
 
 ## Content Extraction
 
-Content extraction is provided by the @extractus/article-extractor third-party library. I have only minimally evaluated it for robustness and safety. It seems to work reliably on CNN and Reuters, and a few other random news sites, but I have not tested it extensively. Definitely saved me a lot of effort, but this is likely a good place to start to improve the overall robustness of this application. 
+Content extraction is provided by the [@extractus/article-extractor](https://github.com/extractus/article-extractor) third-party library. I have only minimally evaluated it for robustness and safety. It seems to work reliably on CNN and Reuters, and a few other random news sites, but I have not tested it extensively. Definitely saved me a lot of effort, but this is likely a good place to start to improve the overall robustness of this application. 
 
 ## Chunking Logic 
 
@@ -31,18 +31,18 @@ The current approach uses matchAll() with a regex that tries to break on various
 
 ## Keyword Extraction
 
-To lookup stock images (currently using Pexels), we need to get a handful of keywords to query with. To get keywords the approach is: split the content on spaces, filter out common words (stop words), de-duplicate the list, and then finally sort by word length and pick the top-N words. Obviously the longest words are the most representative of of the core ideas in the content and there are absolutely no better ways to extract key words. Obviously. 
+To lookup stock images, we need to get a handful of keywords to query with. To get keywords the approach is: split the content on spaces, filter out common words (stop words), de-duplicate the list, and then finally sort by word length and pick the top-N words. Obviously the longest words are the most representative of of the core ideas in the content and there are absolutely no better ways to extract key words. Obviously. 
 
 ## Stock Images 
 
-The stock images are using the free [Pexels](https://www.pexels.com/) API. Pretty cool service but would be nicer if queries could involve some filters like style or type of images. 
+The stock images are from the free [Pexels](https://www.pexels.com/) API. Pretty cool service but would be nicer if queries could involve some filters like style/type of image, images with space for copy, and if images provided focal-point metadata. Perhaps a good idea for a future project.
 
 ## Stock Image Caching 
 
-I noticed that occasionally during testing the Pexels API would stop responding if I made too many requests in short succession. If this happened during testing, it would definitely happen if more than a handful of people ever tried to use it at once in Production. So I implemented a caching layer using sqlite.
+I noticed that occasionally during testing the Pexels API would return 429s if I made too many requests in short succession even if I wasnt over the monthly rate limit. I found out later that they have a per hour rate limit as well. If this happened during testing, it would definitely happen if more than a handful of people ever tried to use it at once in Production. So I implemented a caching layer using sqlite to help mitigate this.
 
-Every time a stock image is successfully looked up via Pexels, the image URL returned it saved along with the query terms that found it. If in the future, the Pexels API errors out, the cache is queried instead to try to find a suitable image. If no good matches are found, a random image from the cache is returned. 
-Over time, the cache will grow and that should improve the chances of a good cache hit result coming back. But since it will always return something, that means the service will at least always continue to function at minimum.
+Every time a stock image is successfully fetched from Pexels, the image URL returned is saved along with the query terms that found it. If in the future the Pexels API errors out, the cache is queried instead to try to find a suitable image. If no good matches are found, a random image from the cache is returned. 
+Over time, the cache will grow and that should improve the chances of a cache hit and a relevant result coming back. But since it will always return something, that means the service will continue to function at the very least.
 
 # Try it Out 
 
