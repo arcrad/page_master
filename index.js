@@ -1,5 +1,18 @@
 import dotenv from 'dotenv';
 dotenv.config();
+
+if(!process.env.DATABASE_URL) {
+  throw new Error('DATABASE_URL is undefined');
+}
+
+if(!process.env.PEXELS_API_KEY) {
+  throw new Error('PEXELS_API_KEY is undefined');
+}
+
+if(!process.env.OPENAI_API_KEY) {
+  throw new Error('OPENAI_API_KEY is undefined');
+}
+
 import express from 'express';
 import fs from 'fs';
 import sqlite3 from 'sqlite3';
@@ -8,21 +21,15 @@ import { extract } from '@extractus/article-extractor';
 import parseHtml from './src/utils/parseHtml.js';
 import chunkSection from './src/utils/chunkSection.js';
 import extractKeyTerms from './src/utils/extractKeyTerms.js';
+import { AiService } from './src/utils/aiService.js';
 import { PhotoService } from './src/utils/photoService.js';
 
 const app = express();
 const port = 3000;
 
-if(!process.env.DATABASE_URL) {
-  throw new Error('DATABASE_URL is undefined');
-}
-
-if(!process.env.PEXELS_API_KEY) {
-  throw new Error('DATABASE_URL is undefined');
-}
-
 const db = new sqlite3.Database(process.env.DATABASE_URL);
 const photoService = new PhotoService(process.env.PEXELS_API_KEY, db);
+const aiService = new AiService(process.env.OPENAI_API_KEY);
 
 app.get('/', async (req, res) => {
   res.redirect('/index.html');
@@ -30,8 +37,11 @@ app.get('/', async (req, res) => {
 
 app.get('/makebook/:source_url', async (req, res) => {
   try {
-    const source_url = req.params.source_url; 
+    const source_url = req.params.source_url;
+    const simplify = Boolean(parseInt(req.query.simplify));
+    
     console.log(`Try to fetch and extract source_url=${source_url}`);
+    console.log(`  simplify = ${simplify ? 'true' : 'false'}`);
 
     // Get article content.
     const article = await extract(
@@ -63,9 +73,12 @@ app.get('/makebook/:source_url', async (req, res) => {
       page.title = section.title;
       for(const chunks of section.chunked_text) {
         page.text = chunks.join('');
+        if(simplify) {
+          page.text = await aiService.simplifyText(page.text);
+        }
         pages.push({...page});
         page = {};
-      } 
+      }
     }
 
     // Find key terms and a photo for each page.
