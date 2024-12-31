@@ -37,8 +37,11 @@ function App() {
   const [pageData, setPageData] = useState(initialBookData);
   const [currentPage, setCurrentPage] = useState(0);
   const [topBarVisible, setTopBarVisible] = useState(true);
+  const [optionsVisible, setOptionsVisible] = useState(false);
+  const [simplify, setSimplify] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState([]);
+
   const url = useRef(null);
 
   async function getBookData() {
@@ -104,6 +107,14 @@ function App() {
   
   function toggleTopBar() {
     setTopBarVisible( (s) => !s);
+  }
+
+  function toggleOptionsVisibility() {
+    setOptionsVisible( (s) => !s);
+  }
+
+  function toggleSimplifyOption(evnet) {
+    setSimplify(event.target.checked);
   }
 
   function closeErrorItem(index) {
@@ -174,11 +185,35 @@ function App() {
           </div>
         }
         <div className={topBarClasses}>
-          <div className="titleContainer">
-            <h1>Page Master</h1>
+          <div className="topBarContainer">
+            <div className="titleContainer">
+              <h1>Page Master</h1>
+              <button
+                className={ "toggleOptionsButton" + (optionsVisible ? ' optionsVisible' : '' )} 
+                type="button"
+                aria-label="Options"
+                onClick={toggleOptionsVisibility}
+              >
+              </button>
+            </div>
             <div className="controlsContainer">
-              <input type="text" ref={url}/>
-              <button onClick={getBookData}>Book It</button>
+              <div className="actions">
+                <input type="text" ref={url}/>
+                <button onClick={getBookData}>Book It</button>
+              </div>
+              {
+                optionsVisible &&
+                <div className="options">
+                  <h2>Options</h2>
+                  <div className="optionRow">
+                    <label for="simplify">Simplify content? </label>
+                    <input type="checkbox" name="simplify" id="simplifyCheckbox" onChange={toggleSimplifyOption} checked={simplify}/>
+                  </div>
+                  <div className="optionDescriptionRow">
+                    <p>Rephrases the text on each page so it's easier to understand.</p>
+                  </div>
+                </div>
+              }
             </div>
           </div>
           <div className="topBarToggleContainer">
