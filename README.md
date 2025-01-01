@@ -68,6 +68,6 @@ Over time, the cache will grow and that should improve the chances of a cache hi
 
 ## Hosting
 
-I've been trying out Fly.io for hosting a couple of recent projects. So far I'm loving how simple everything has been. I haven't really pushed the boundaries bery hard to see where things break down yet. Im sure it has rough edges, but for the simple Node + React + Express apps Ive deployed it is working quite well straight off.
+I've been trying out Fly.io for hosting a couple of recent projects. So far I'm loving how simple everything has been. I haven't really pushed the boundaries very hard to see where things break down yet. Im sure it has rough edges, but for the simple Node + React + Express apps I've deployed it is working quite well straight off.
 
-One issue Ive encountered is that it seems like the default xyz.fly.dev URL your projects get will fail DNS resolution for certain users. I'm not sure what combination of network factors affect it. When I get more time I'd like to dig into it and see if I can reproduce it reliably and figure out the root cause.
+One issue I've encountered is that it seems like the default xyz.fly.dev URL your projects gets will fail DNS resolution for certain users. I'm not sure what combination of network factors affect it. When I get more time I'd like to dig into it and see if I can reproduce it reliably and figure out the root cause. I also need to test to see if setting up a custom domain would fix it. 
