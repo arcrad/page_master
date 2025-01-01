@@ -7,7 +7,7 @@ const initialBookData = [
   {
     title: 'What is Page Master?',
     content_component: function () { return (
-      <div><p>Give Page Master the URL for a news article (or any website) and click the <strong>Book It</strong> button. Page Master will break the article down into pages and find a relevant image for each page. The goal is to make a boring article more interesting so you can read it yourself and to your children at the same time.</p></div>
+      <div><p>Give Page Master the URL for a news article (or any website) and click the <strong>Book It</strong> button. Page Master breaks the article up into pages and finds a picture for each page.</p><p>The goal is to make a boring article more interesting so you can read it yourself and to your children at the same time.</p><p>You can also simplify the content of each page so its easier for a kid to understand it. Enable this with the <strong>Simplify Content</strong> option via the gear icon.</p></div>
     )},
     photo_url: 'https://images.pexels.com/photos/7648022/pexels-photo-7648022.jpeg',
     justification_index: 1
