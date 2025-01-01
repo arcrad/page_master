@@ -7,7 +7,7 @@ Want to read a news article or other web page, but your children want you to rea
 The process is essentially:
 
 - Fetch webpage from the URL provided
-- Extract "main" content from webpage
+- Extract "main" content from webpage (and optionally simplify it via a LLM)
 - Split content into short chunks
 - Find a relevant stock image for each chunk
 - Put each chunk and image on a page
@@ -21,7 +21,7 @@ If you're interested, the following describes some of the functionality in a bit
 
 ## Content Extraction
 
-Content extraction is provided by the [@extractus/article-extractor](https://github.com/extractus/article-extractor) third-party library. I have only minimally evaluated it for robustness and safety. It seems to work reliably on CNN and Reuters, and a few other random news sites, but I have not tested it extensively. Definitely saved me a lot of effort, but this is likely a good place to start to improve the overall robustness of this application. 
+Content extraction is provided by the [@extractus/article-extractor](https://github.com/extractus/article-extractor) third-party library. I have only minimally evaluated it for robustness and safety. It seems to work reliably on CNN and Yahoo, and a few other random news sites, but I have not tested it extensively. It appears to have problems fetching from Reuters. Definitely saved me a lot of effort, but this is likely a good place to start to improve the overall robustness of this application. 
 
 ## Chunking Logic 
 
@@ -32,6 +32,14 @@ The current approach uses matchAll() with a regex that tries to break on various
 ## Keyword Extraction
 
 To lookup stock images, we need to get a handful of keywords to query with. To get keywords the approach is: split the content on spaces, filter out common words (stop words), de-duplicate the list, and then finally sort by word length and pick the top-N words. Obviously the longest words are the most representative of of the core ideas in the content and there are absolutely no better ways to extract key words. Obviously. 
+
+## Simplification via LLM
+
+You can optionally enable LLM-based (powered by OpenAI's o4-mini chat completion) simplification of page content via the options menu (gear icon in top right). With simplification enabled, the content of each page is passed through a prompt to "rephrase the content to be understandable by a six year old".
+
+Although very impressive when it works, the LLM leaves a hilariously large hole open for prompt-injection. In my admittedly limited research, it seems that reliably preventing prompt-injection is no where close to being a solved problem. Things like adding secret delimiters, being mean to the LLM, and layering prompts on top of each other all come up as solutions, but none appear to be very robust. This step also adds significant additional latency which diminishes the end user experience.
+
+There is much room for improvement here though being able to call out to a LLM to perform this task is quite a powerful tool. As always, LLMs thrive in non-adversarial conditions and thus seems to perform acceptably in this use case. I'll need to learn and experiment more to see how a LLM could be used in any public-facing, adversarial task. 
 
 ## Stock Images 
 
