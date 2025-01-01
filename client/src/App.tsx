@@ -32,6 +32,19 @@ const initialBookData = [
   }
 ];
 
+function getWeightedJustificationIndex() {
+  // Returns a random number between 0 and 2.
+  // Weighted so 0 and 2 are more likely than 1.
+  if(Math.random() >= 0.13) {
+    if(Math.random() > 0.5) {
+      return 0;
+    } else {
+      return 2;
+    }
+  }
+  return 1;
+}
+
 function App() {
   //const [pageData, setPageData] = useState([])
   const [pageData, setPageData] = useState(initialBookData);
@@ -82,11 +95,11 @@ function App() {
       return;
     }
     const pages = responseJson.pages;
-    const updatedPages = pages.map( (page) => {
+    const updatedPages = pages.map( (page, index) => {
       return (
         {
           ...page,
-          'justification_index': Math.floor(Math.random()*3)
+          'justification_index': (index === 0 ? 1 : getWeightedJustificationIndex()),
         }
       )
     });
