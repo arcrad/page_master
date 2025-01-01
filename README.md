@@ -13,11 +13,13 @@ The process is essentially:
 - Put each chunk and image on a page
 - Present all the pages as a book that can be flipped through
 
-The implementation of all of this is very much a minimal viable prototype. The content extraction is based on a third party library. The chunking logic is simple and fragile, and the keyword extraction algorithm is hilariously basic. There is a caching layer between the free stock image API just so things can function somewhat reliably when the API inevitably errors out or exceeds the rate limit. 
+The implementation of all of this is very much a minimal viable prototype. The content extraction is based on a third party library. The chunking logic is simple and fragile, and the keyword extraction algorithm is hilariously basic. Though there is a caching layer between the free stock image API just so things can function somewhat reliably when the API inevitably errors out or exceeds the rate limit. 
+
+The approach for development was to stub in the most basic version of each piece of functionality to quickly build up the minimal end-to-end workflow. From there, each piece can be incrementally improved to enhance the overall functionality. I want to put in the minimal initial effort to get a working prototype, and then after confirming it has any utility, iteratively work on improving the weakest parts.
 
 # A Bit More Detail
 
-If you're interested, the following describes some of the functionality in a bit more detail. 
+If you're interested, the following describes some of the functionality in more detail. 
 
 ## Content Extraction
 
@@ -25,13 +27,21 @@ Content extraction is provided by the [@extractus/article-extractor](https://git
 
 ## Chunking Logic 
 
-The goal is to break down the content into sentences so that just a few can be put onto each page. Currently it is hard-coded to put just two sentences per page. However the logic that breaks down the content into sentences is not much more complicated than splitting on the ". " pattern. 
+The goal is to break down the content into sentences so that just a few can be put onto each page. Currently it is hard-coded to put just two sentences per page. However the logic that breaks down the content into sentences is only a bit more complicated than splitting on the ". " pattern. 
 
 The current approach uses matchAll() with a regex that tries to break on various typical sentence ending patterns. Things like period+space, quote+period, question-mark+space, etc. We also want to avoid splitting on abbreviations like "Dr." and "Lt." so those are replaced with placeholders prior to splitting and then restored after. That's it. Certainly lots of room for improvement. 
 
 ## Keyword Extraction
 
-To lookup stock images, we need to get a handful of keywords to query with. To get keywords the approach is: split the content on spaces, filter out common words (stop words), de-duplicate the list, and then finally sort by word length and pick the top-N words. Obviously the longest words are the most representative of of the core ideas in the content and there are absolutely no better ways to extract key words. Obviously. 
+To lookup stock images, we need to get a handful of keywords to query with. To get keywords the approach is: 
+
+- Split the content on spaces
+- Filter out common words (stop words)
+- De-duplicate the list
+- Sort by word length
+- Return the top-N words
+
+Obviously the longest words are the most representative of of the core ideas in the content and there are absolutely no better ways to extract keywords. 
 
 ## Simplification via LLM
 
