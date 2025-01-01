@@ -49,9 +49,13 @@ function App() {
       setErrors( (e) => [...e, 'URL is invalid']);
       return;
     }
+    let simplifyQueryParam = '';
+    if(simplify) {
+      simplifyQueryParam = '?simplify=1';
+    }
     setLoading(true);
     const encodedUrl = encodeURIComponent(url.current.value);
-    const getPageDataUrl = `/makebook/${encodedUrl}`;
+    const getPageDataUrl = `/makebook/${encodedUrl}${simplifyQueryParam}`;
     let response = null;
     let responseJson = null;
     try {
@@ -92,7 +96,7 @@ function App() {
     setErrors([]);
     setTopBarVisible(false);
   }
-    
+
   function firstPage() {
     setCurrentPage(0);
   }
@@ -104,7 +108,7 @@ function App() {
   function nextPage() {
     setCurrentPage((num) => (num + 1 > pageData.length-1) ? pageData.length-1 : num+1);
   }
-  
+
   function toggleTopBar() {
     setTopBarVisible( (s) => !s);
   }
@@ -135,7 +139,7 @@ function App() {
     );
   });
 
-  const errorsList = errors.map( (error, index) => 
+  const errorsList = errors.map( (error, index) =>
     <motion.li layout key={index}
       initial={{ opacity: 0, y: 50, scale: 0.3 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -158,26 +162,26 @@ function App() {
           <Book currentPage={currentPage}>
             {pages}
           </Book>
-          { 
+          {
             pages.length > 0 && (
               <div className="bookNav">
-                <button 
+                <button
                   onClick={prevPage}
                   disabled={(currentPage === 0)}
-                >Previous</button> 
-                <button 
+                >Previous</button>
+                <button
                   onClick={nextPage}
                   disabled={currentPage === (pageData.length-1)}
-                >Next</button> 
-                <button 
+                >Next</button>
+                <button
                   onClick={firstPage}
                 >↺</button>
               </div>
             )
           }
         </div>
-        { 
-          loading && 
+        {
+          loading &&
           <div className="loadingIndicator">
             <div className="spinner">
               Loading...
@@ -189,7 +193,7 @@ function App() {
             <div className="titleContainer">
               <h1>Page Master</h1>
               <button
-                className={ "toggleOptionsButton" + (optionsVisible ? ' optionsVisible' : '' )} 
+                className={ "toggleOptionsButton" + (optionsVisible ? ' optionsVisible' : '' )}
                 type="button"
                 aria-label="Options"
                 onClick={toggleOptionsVisibility}
